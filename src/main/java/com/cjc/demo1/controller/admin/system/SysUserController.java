@@ -81,6 +81,20 @@ public class SysUserController  {
         }
 
     }
+    @RequestMapping(value="/getById", method= RequestMethod.GET)
+    @ApiOperation(value = "根据Id获取用户", notes = "根据Id获取用户", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id",value = "用户Id", required = true, paramType = "SysUser"),
+
+    })
+    public SysUser getById(String id){
+        if(id==null){
+            throw new  UserException(ErrorCodeAndMsg.User_Id_is_empty);
+        }
+        if(id.equals(""))
+        { throw new  UserException(ErrorCodeAndMsg.User_Id_is_empty);}
+        return ISysUserService.getById(id);
+    }
     @RequestMapping(value="/del", method= RequestMethod.POST)
     @ApiOperation(value = "删除", notes = "用户删除", httpMethod = "POST")
     @ApiImplicitParams({
