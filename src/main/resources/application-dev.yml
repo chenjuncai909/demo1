@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: CJC_Admin
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url:  jdbc:mysql://121.199.76.161:3306/demo1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC    #mysql8
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+
+
+server:
+  port: 8081
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.cjc.demo1.entity  #扫描实体类,配置xml的别名
+  configuration:
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
