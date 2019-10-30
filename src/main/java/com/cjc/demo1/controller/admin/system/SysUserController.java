@@ -8,7 +8,6 @@ import com.cjc.demo1.entity.system.SysUser;
 import com.cjc.demo1.enums.ErrorCodeAndMsg;
 import com.cjc.demo1.exception.UserException;
 import com.cjc.demo1.service.system.ISysUserService;
-import com.cjc.demo1.utils.DateUtil;
 import com.cjc.demo1.utils.MD5;
 import com.cjc.demo1.utils.UuidUtil;
 import io.swagger.annotations.Api;
@@ -17,12 +16,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 /**
@@ -95,7 +92,7 @@ public class SysUserController  {
         { throw new  UserException(ErrorCodeAndMsg.User_Id_is_empty);}
         return ISysUserService.getById(id);
     }
-    @RequestMapping(value="/del", method= RequestMethod.POST)
+    @RequestMapping(value="/del", method= RequestMethod.DELETE)
     @ApiOperation(value = "删除", notes = "用户删除", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id",value = "用户Id", required = true, paramType = "SysUser"),
@@ -117,7 +114,7 @@ public class SysUserController  {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "user",value = "用户实例", required = true, paramType = "SysUser"),
     })
-    public List<SysUser> listByCondition(SysUser user,Long page,Long size,String sortName,Integer sort){
+    public IPage<SysUser> listByCondition(String keyWords ,Long page,Long size,String endDate,String startDate,String sortName,Integer sort){
         //设置分页参数
         Page<SysUser> sysUserPage = new Page<>();
         if(page==null){
@@ -139,20 +136,27 @@ public class SysUserController  {
         sysUserPage.setSize(size);
         //设置查询条件
         QueryWrapper<SysUser> sysUserQueryWrapper ;
-        if(null==user)
+        if(null==keyWords)
         {
             sysUserQueryWrapper = null;
         }
         else
         {
             sysUserQueryWrapper = new QueryWrapper<>();
-            if(user.getName()!=null&&user.getName()!="")
-            {
-                sysUserQueryWrapper.like("name",user.getName());
-            }
+            sysUserQueryWrapper.like("name",keyWords).or().like("userName",keyWords);
+
         }
-        IPage<SysUser> page1 = ISysUserService.page(sysUserPage, sysUserQueryWrapper);
-        return page1.getRecords();
+        if(null!=endDate&&!"".equals(endDate))
+        {
+            assert sysUserQueryWrapper != null;
+            sysUserQueryWrapper.and(i -> i.ge("createTime", endDate));
+        }
+        if(null!=startDate&&!"".equals(startDate))
+        {
+            assert sysUserQueryWrapper != null;
+            sysUserQueryWrapper.and(i -> i.le("createTime", startDate));
+        }
+        return ISysUserService.page(sysUserPage, sysUserQueryWrapper);
     }
 
 }

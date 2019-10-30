@@ -1,6 +1,7 @@
 spring:
   application:
     name: CJC_Admin
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url:  jdbc:mysql://121.199.76.161:3306/demo1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC    #mysql8
@@ -10,8 +11,9 @@ spring:
 
 
 server:
-  port: 8081
-
+  port: 8082
+  servlet:
+    context-path: /demo1
 mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.cjc.demo1.entity  #扫描实体类,配置xml的别名
