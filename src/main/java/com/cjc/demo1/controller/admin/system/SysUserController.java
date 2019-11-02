@@ -15,9 +15,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -30,25 +28,31 @@ import java.time.LocalDateTime;
  * @author cjc
  * @since 2019-10-29
  */
+@CrossOrigin()
 @RestController
 @Api(tags="用户控制类")
 @RequestMapping("user")
 public class SysUserController  {
     @Autowired
     private ISysUserService ISysUserService;
-    @RequestMapping(value="/add", method= RequestMethod.POST)
+    @RequestMapping(value="/add", method= RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "添加", notes = "用户添加", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "user",value = "用户实例", required = true, paramType = "SysUser"),
 
     })
-    public String add(SysUser user){
+    public String add( SysUser user){
         if(null==user)
         {
-            return "00";
+            throw new UserException(ErrorCodeAndMsg.User_is_empty);
+        }
+        if(null==user.getName())
+        {
+            throw new UserException(ErrorCodeAndMsg.User_is_empty);
         }
         else
         {
+
             String password = MD5.md5(user.getPassWord());
             user.setId(UuidUtil.get32UUID());
             user.setPassWord(password);
@@ -65,7 +69,7 @@ public class SysUserController  {
             @ApiImplicitParam(name = "user",value = "用户实例", required = true, paramType = "SysUser"),
 
     })
-    public String update(SysUser user){
+    public String update(@RequestBody SysUser user){
         if(null==user)
         {
             throw new UserException(ErrorCodeAndMsg.User_is_empty);
@@ -97,7 +101,7 @@ public class SysUserController  {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id",value = "用户Id", required = true, paramType = "SysUser"),
     })
-    public String delete(String id){
+    public String delete( @RequestBody(required = false) String id){
         if(null==id)
         {
             throw new UserException(ErrorCodeAndMsg.User_Id_is_empty);
