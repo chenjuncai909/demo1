@@ -3,19 +3,51 @@ spring:
     name: CJC_Admin
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url:  jdbc:mysql://121.199.76.161:3306/demo1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC    #mysql8
+    url:  jdbc:mysql://121.199.76.161:3306/demo1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC   #mysql8
     username: root
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
-
+  thymeleaf:
+    prefix: classpath:/static/
+  #缓存配置
+#  cache:
+#    cache-names: c1
+#    redis:
+#      time-to-live: 1800s
+  #redis配置
+#  redis:
+#    database: 0
+#    host: 121.199.76.161
+#    port: 6379
+#    password:
+#    jedis:
+#      pool:
+#        max-active: 8
+#        max-idle: 8
+#        max-wait: -1ms
+#        min-idle: 0
 
 server:
   port: 8083
   servlet:
     context-path: /demo1
+fdfs:
+  # 连接Tracker服务器超时时间
+  connect-timeout: 10000
+  # storage服务器响应的超时时间
+  so-timeout: 3000
+  #  trakcer服务器的数量
+  tracker-list:
+    - 121.199.76.161:22122
 mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.cjc.demo1.entity  #扫描实体类,配置xml的别名
   configuration:
     # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# Shrio 配置
+shiro:
+  enabled: false
+  loginUrl: /login
+  successUrl: /

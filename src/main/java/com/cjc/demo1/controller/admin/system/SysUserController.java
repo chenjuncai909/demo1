@@ -39,9 +39,8 @@ public class SysUserController  {
     @ApiOperation(value = "添加", notes = "用户添加", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "user",value = "用户实例", required = true, paramType = "SysUser"),
-
     })
-    public String add( SysUser user){
+    public String add(@RequestBody(required = false) SysUser user){
         if(null==user)
         {
             throw new UserException(ErrorCodeAndMsg.User_is_empty);
@@ -52,22 +51,19 @@ public class SysUserController  {
         }
         else
         {
-
             String password = MD5.md5(user.getPassWord());
             user.setId(UuidUtil.get32UUID());
             user.setPassWord(password);
             user.setCreateTime(LocalDateTime.now());
             user.setUpdateTime(LocalDateTime.now());
-            ISysUserService.save(user);
+            ISysUserService.saveOrUpdate(user);
             return "01";
         }
-
     }
     @RequestMapping(value="/edit", method= RequestMethod.POST)
     @ApiOperation(value = "修改", notes = "用户修改", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "user",value = "用户实例", required = true, paramType = "SysUser"),
-
     })
     public String update(@RequestBody SysUser user){
         if(null==user)
@@ -80,7 +76,6 @@ public class SysUserController  {
             ISysUserService.updateById(user);
             return "01";
         }
-
     }
     @RequestMapping(value="/getById", method= RequestMethod.GET)
     @ApiOperation(value = "根据Id获取用户", notes = "根据Id获取用户", httpMethod = "GET")
@@ -90,21 +85,21 @@ public class SysUserController  {
     })
     public SysUser getById(String id){
         if(id==null){
-            throw new  UserException(ErrorCodeAndMsg.User_Id_is_empty);
+            throw new  UserException(ErrorCodeAndMsg.User_id_is_empty);
         }
         if(id.equals(""))
-        { throw new  UserException(ErrorCodeAndMsg.User_Id_is_empty);}
+        { throw new  UserException(ErrorCodeAndMsg.User_id_is_empty);}
         return ISysUserService.getById(id);
     }
-    @RequestMapping(value="/del", method= RequestMethod.DELETE)
+    @RequestMapping(value="/del/{id}", method= RequestMethod.DELETE)
     @ApiOperation(value = "删除", notes = "用户删除", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id",value = "用户Id", required = true, paramType = "SysUser"),
     })
-    public String delete( @RequestBody(required = false) String id){
+    public String delete(@PathVariable String id){
         if(null==id)
         {
-            throw new UserException(ErrorCodeAndMsg.User_Id_is_empty);
+            throw new UserException(ErrorCodeAndMsg.User_id_is_empty);
         }
         else
         {

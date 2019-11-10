@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -59,7 +58,10 @@ public class SysUser  {
     @TableField("updateTime")
     private LocalDateTime updateTime;
 
-
-
+    /**
+     * 修改时间
+     */
+    @TableField("status")
+    private int status;
 
 }

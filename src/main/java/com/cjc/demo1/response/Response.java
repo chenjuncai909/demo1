@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize()
 public class Response<T> implements Serializable {
 
     private static final long serialVersionUID = -4505655308965878999L;
@@ -26,7 +26,7 @@ public class Response<T> implements Serializable {
     //返回描述
     private String msg;
 
-    public Response(){
+    private Response(){
         this.code = successCode;
         this.msg = "请求成功";
     }
